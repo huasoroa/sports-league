@@ -1,13 +1,27 @@
-import type { leagues } from "@/server/db/schema";
-import type { ColumnDef } from "@tanstack/react-table";
+'use client';
 
-export const columnDefs: ColumnDef<typeof leagues.$inferSelect>[] = [
-  {
-    accessorKey: "leagueId",
-    header: "ID",
-  },
-  {
-    accessorKey: "name",
-    header: "Name",
-  },
+import { createColumnHelper } from '@tanstack/react-table';
+import Link from 'next/link';
+
+import { Button } from '@/components/ui/button';
+import type { leagues } from '@/server/db/schema';
+
+const colHelper = createColumnHelper<typeof leagues.$inferSelect>();
+
+export const columnDefs = [
+  colHelper.accessor('leagueId', {
+    header: 'ID',
+  }),
+  colHelper.accessor('name', {
+    header: 'Name',
+    cell: (props) => {
+      return (
+        <Button variant={'link'} asChild>
+          <Link href={`/league/${props.row.original.leagueId}`}>
+            {props.getValue()}
+          </Link>
+        </Button>
+      );
+    },
+  }),
 ];
