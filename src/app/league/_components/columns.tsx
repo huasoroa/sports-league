@@ -9,9 +9,6 @@ import type { leagues } from '@/server/db/schema';
 const colHelper = createColumnHelper<typeof leagues.$inferSelect>();
 
 export const columnDefs = [
-  colHelper.accessor('leagueId', {
-    header: 'ID',
-  }),
   colHelper.accessor('name', {
     header: 'Name',
     cell: (props) => {

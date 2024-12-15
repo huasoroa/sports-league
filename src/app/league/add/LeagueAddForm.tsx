@@ -18,7 +18,7 @@ import {
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Switch } from '@/components/ui/switch';
-import { addLeague } from '@/server/db/actions';
+import { createLeague } from '@/server/db/actions';
 
 const FormSchema = z.object({
   name: z.string().min(2, 'Name is too short, minimum 2 characters'),
@@ -41,7 +41,7 @@ export const LeagueAddForm = () => {
   return (
     <Form {...form}>
       <form
-        onSubmit={form.handleSubmit(addLeague)}
+        onSubmit={form.handleSubmit(createLeague)}
         className="space-y-8 max-w-fit flex flex-col gap-4"
       >
         <FormField
@@ -76,31 +76,30 @@ export const LeagueAddForm = () => {
             }}
           />
         </div>
-        {hasDivisions && (
-          <FormField
-            control={form.control}
-            name="divisions"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel className="text-base font-semibold">
-                  Divisions
-                </FormLabel>
-                <FormControl>
-                  <Input
-                    type="number"
-                    placeholder="Divisions"
-                    {...field}
-                    autoComplete="off"
-                  />
-                </FormControl>
-                <FormDescription>
-                  The number of divisions in the league, e.g. 4
-                </FormDescription>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-        )}
+        <FormField
+          control={form.control}
+          name="divisions"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel className="text-base font-semibold">
+                Divisions
+              </FormLabel>
+              <FormControl>
+                <Input
+                  type="number"
+                  placeholder="Divisions"
+                  disabled={!hasDivisions}
+                  {...field}
+                  autoComplete="off"
+                />
+              </FormControl>
+              <FormDescription>
+                The number of divisions in the league, e.g. 4
+              </FormDescription>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
         <Button type="submit">Create League</Button>
       </form>
     </Form>

@@ -1,10 +1,12 @@
-import DataTable from "@/components/ui/data-table";
-import { columnDefs } from "./_components/columns";
-import { Button } from "@/components/ui/button";
-import { PlusCircle } from "lucide-react";
-import Link from "next/link";
-import { db } from "@/server/db";
-import { leagues } from "@/server/db/schema";
+import { PlusCircle } from 'lucide-react';
+import Link from 'next/link';
+
+import { Button } from '@/components/ui/button';
+import DataTable from '@/components/ui/data-table';
+import { db } from '@/server/db';
+import { leagues } from '@/server/db/schema';
+
+import { columnDefs } from './_components/columns';
 
 const LeagueHomePage = async () => {
   const allLeagues = await db.select().from(leagues);
@@ -12,7 +14,7 @@ const LeagueHomePage = async () => {
   return (
     <div>
       <div className="flex items-center justify-between">
-        <h1 className="text-3xl font-bold my-2">League Home</h1>
+        <h1 className="text-3xl font-bold my-2">Leagues</h1>
         <Link href="/league/add">
           <Button variant="link">
             <PlusCircle /> Add League

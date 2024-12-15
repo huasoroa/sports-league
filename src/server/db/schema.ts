@@ -24,10 +24,13 @@ export const users = createTable('users', {
   firstName: text('first_name').notNull(),
   lastName: text('last_name').notNull(),
   role: userRole('role').notNull(), // Role defined by enum
+  createdAt: timestamp('created_at').notNull().defaultNow(),
+  updatedAt: timestamp('updated_at', { mode: 'date', precision: 3 }).$onUpdate(
+    () => new Date(),
+  ),
 });
 
 // 1. Sports Table
-// was added
 export const sports = createTable('sports', {
   sportId: integer('sport_id').primaryKey().generatedAlwaysAsIdentity(),
   name: text('name').notNull(),
@@ -60,8 +63,8 @@ export const divisions = createTable('divisions', {
     .references(() => seasons.seasonId),
   name: text('name').notNull(),
   level: integer('level').notNull(),
-  promotionSpots: integer('promotion_spots').notNull(),
-  relegationSpots: integer('relegation_spots').notNull(),
+  promotionSpots: integer('promotion_spots').notNull().default(0),
+  relegationSpots: integer('relegation_spots').notNull().default(0),
 });
 
 // 5. Clubs Table
@@ -96,13 +99,13 @@ export const players = createTable('players', {
   age: integer('age').notNull(),
 });
 
-// 8. Team_Rosters Table
 export const rosterStatus = pgEnum('roster_status', [
   'Active',
   'Reserve',
   'Injured',
 ]);
 
+// 8. Team_Rosters Table
 export const teamRosters = createTable('team_rosters', {
   rosterId: integer('roster_id').primaryKey().generatedAlwaysAsIdentity(),
   teamId: integer('team_id')
@@ -116,7 +119,9 @@ export const teamRosters = createTable('team_rosters', {
     .references(() => seasons.seasonId),
   status: rosterStatus('status').notNull(),
 });
+
 export const results = pgEnum('results', ['TeamHome', 'TeamAway', 'Draw']);
+
 // 9. Matches Table
 export const matches = createTable('matches', {
   matchId: integer('match_id').primaryKey().generatedAlwaysAsIdentity(),
@@ -140,12 +145,12 @@ export const matches = createTable('matches', {
   result: results('result'),
 });
 
-// 10. Match_Participants Table
 export const participantRole = pgEnum('participant_role', [
   'Starter',
   'Substitute',
 ]);
 
+// 10. Match_Participants Table
 export const matchParticipants = createTable('match_participants', {
   participantId: integer('participant_id')
     .primaryKey()
