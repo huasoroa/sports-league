@@ -6,21 +6,21 @@ import { Button } from '@/components/ui/button';
 import { db } from '@/server/db';
 import { clubs, leagues, seasons } from '@/server/db/schema';
 
-const LeagueHomePage = async ({ params }: { params: { id: string } }) => {
-  const { id } = await params;
+const LeagueHomePage = async ({ params }: { params: { leagueId: string } }) => {
+  const { leagueId } = await params;
 
   const singleLeague = await db.query.leagues.findFirst({
-    where: eq(leagues.leagueId, Number(id)),
+    where: eq(leagues.leagueId, Number(leagueId)),
   });
   const allSeasons = await db
     .select()
     .from(seasons)
-    .where(eq(seasons.leagueId, Number(id)));
+    .where(eq(seasons.leagueId, Number(leagueId)));
 
   const allClubs = await db
     .select()
     .from(clubs)
-    .where(eq(clubs.leagueId, Number(id)));
+    .where(eq(clubs.leagueId, Number(leagueId)));
 
   return (
     <div>
@@ -28,7 +28,7 @@ const LeagueHomePage = async ({ params }: { params: { id: string } }) => {
       <div className="flex items-center">
         <h2 className="text-xl">Seasons</h2>
         <Button variant={'link'} asChild>
-          <Link href={`/league/${id}/season/add`}>
+          <Link href={`/league/${leagueId}/season/add`}>
             <PlusCircleIcon />
             Add Season
           </Link>
@@ -38,7 +38,7 @@ const LeagueHomePage = async ({ params }: { params: { id: string } }) => {
         {allSeasons.length === 0 && <li>No seasons found for this league</li>}
         {allSeasons.map((season) => (
           <li key={season.seasonId}>
-            <Link href={`/league/${id}/season/${season.seasonId}`}>
+            <Link href={`/league/${leagueId}/season/${season.seasonId}`}>
               {season.year}
             </Link>
           </li>
@@ -47,7 +47,7 @@ const LeagueHomePage = async ({ params }: { params: { id: string } }) => {
       <div className="flex items-center">
         <h2 className="text-xl">Clubs</h2>
         <Button variant={'link'} asChild>
-          <Link href={`/league/${id}/club/add`}>
+          <Link href={`/league/${leagueId}/club/add`}>
             <PlusCircleIcon />
             Add Club
           </Link>
@@ -57,7 +57,7 @@ const LeagueHomePage = async ({ params }: { params: { id: string } }) => {
         {allClubs.length === 0 && <li>No clubs found for this league</li>}
         {allClubs.map((club) => (
           <li key={club.clubId}>
-            <Link href={`/league/${id}/club/${club.clubId}`}>{club.name}</Link>
+            <Link href={`/club/${club.clubId}`}>{club.name}</Link>
           </li>
         ))}
       </ul>
